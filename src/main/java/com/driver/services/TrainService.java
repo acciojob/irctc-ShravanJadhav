@@ -31,30 +31,20 @@ public class TrainService {
         //Save the train and return the trainId that is generated from the database.
         //Avoid using the lombok library
 
-        //create train object
         Train train = new Train();
 
-        //convert trainEntryDto to train
-        //station list converted into String;
-        List<Station> stationList = trainEntryDto.getStationRoute();
-        StringBuilder route = new StringBuilder();
-        int stationSize = stationList.size();
-        for(int i=0; i<stationList.size(); i++){
-            if(i==stationList.size()-1)
-                route.append(stationList.get(i));
-            else {
-                route.append(stationList.get(i));
-                route.append(",");
-            }
+        String route = "";
+        for (Station station : trainEntryDto.getStationRoute())
+        {
+            route = route + station + '.';
         }
+        route = route.substring(0, route.length() - 1);
 
-        train.setRoute(route.toString());
-        train.setNoOfSeats(trainEntryDto.getNoOfSeats());
+        train.setRoute(route);
         train.setDepartureTime(trainEntryDto.getDepartureTime());
+        train.setNoOfSeats(trainEntryDto.getNoOfSeats());
 
-        trainRepository.save(train);
-
-        return train.getTrainId();
+        return trainRepository.save(train).getTrainId();
 
     }
 
@@ -142,17 +132,15 @@ public class TrainService {
         //in problem statement)
         //You can also assume the seconds and milli seconds value will be 0 in a LocalTime format.
 
-         List<Integer> trainList = new ArrayList<>();
-         List<Train> trains = trainRepository.findAll();
+         List<Integer> ans = new ArrayList<>();
+         List<Train> list = trainRepository.findAll();
 
-         for(Train t : trains){
-             String s = t.getRoute();
-             String[]ans = s.split(",");
-
-
-         }
-
-         return trainList;
+        for(Train train : list)
+        {
+            if(train.getRoute().contains(station.toString()) && startTime.compareTo(train.getDepartureTime())<=0 && endTime.compareTo(train.getDepartureTime())>=0)
+                ans.add(train.getTrainId());
+        }
+        return ans;
     }
 
 }

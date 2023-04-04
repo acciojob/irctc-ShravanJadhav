@@ -72,7 +72,7 @@ public class TicketService {
 
             int availableSeats = trainService.calculateAvailableSeats(isAvailable);
             if (bookTicketEntryDto.getNoOfSeats() > availableSeats)
-                throw new Exception("Less tickets are available");
+                throw new Exception("Invalid stations");
             else {
 
                 List<Integer> passengerIds = bookTicketEntryDto.getPassengerIds();
