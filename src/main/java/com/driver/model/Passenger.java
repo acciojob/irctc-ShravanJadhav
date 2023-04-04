@@ -14,7 +14,6 @@ import java.util.List;
 @Table(name = "passenger")
 public class Passenger {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int passengerId;
