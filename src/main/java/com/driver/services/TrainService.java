@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -132,15 +133,26 @@ public class TrainService {
         //in problem statement)
         //You can also assume the seconds and milli seconds value will be 0 in a LocalTime format.
 
-         List<Integer> ans = new ArrayList<>();
-         List<Train> list = trainRepository.findAll();
+         List<Integer> TrainList = new ArrayList<>();
+         List<Train> trains = trainRepository.findAll();
 
-        for(Train train : list)
-        {
-            if(train.getRoute().contains(station.toString()) && startTime.compareTo(train.getDepartureTime())<=0 && endTime.compareTo(train.getDepartureTime())>=0)
-                ans.add(train.getTrainId());
+        for(Train t:trains){
+            String s = t.getRoute();
+            String[] ans = s.split(",");
+            for(int i=0;i<ans.length;i++){
+                if(Objects.equals(ans[i], String.valueOf(station))){
+                    int startTimeInMin = (startTime.getHour() * 60) + startTime.getMinute();
+                    int lastTimeInMin = (endTime.getHour() * 60) + endTime.getMinute();
+
+
+                    int departureTimeInMin = (t.getDepartureTime().getHour() * 60) + t.getDepartureTime().getMinute();
+                    int reachingTimeInMin  = departureTimeInMin + (i * 60);
+                    if(reachingTimeInMin>=startTimeInMin && reachingTimeInMin<=lastTimeInMin)
+                        TrainList.add(t.getTrainId());
+                }
+            }
         }
-        return ans;
+        return TrainList;
     }
 
 }
